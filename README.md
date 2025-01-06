@@ -1,6 +1,9 @@
 # Carpark-Info
 A take-home coding assignment for backend developer interview. 
 
+## Note
+View project README in `CarparkAssignment` folder
+
 ## Your Task
 1. Given the CSV dataset (hdb-carpark-information-<timestamp>.csv) that contains details of a list of carparks, design the database to store the given information in the dataset and to support the below given user stories. ER diagram should be provided.
 2. Write a batch job that will process and store the information into the database of your choice. This is a daily delta file that will be interfaced over from source. In the event there is an error processing the records in the file, the entire file should rollback.

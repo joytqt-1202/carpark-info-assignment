@@ -1,5 +1,8 @@
 # Carpark Info - Backend Assessment
 
+## Navigate to working directory
+Run the command `cd CarparkAssignment`
+
 ## Setting up the DB
 Run the following commands: 
 1. `dotnet ef migrations add InitialCreate`
