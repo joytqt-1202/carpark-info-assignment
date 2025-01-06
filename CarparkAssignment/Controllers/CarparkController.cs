@@ -19,4 +19,19 @@ public class CarparkController: ControllerBase {
             return StatusCode(500, $"Error encountered: {ex.Message}");
         }
     }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetCarparkById(string id) {
+        try {
+            var carpark = await _dbContext.Carparks.FindAsync(id);
+            if (carpark == null) {
+                return NotFound($"Car park with ID {id} not found.");
+            }
+            return Ok(carpark);
+        } catch (Exception ex) {
+            return StatusCode(500, $"Error encountered: {ex.Message}");
+        }
+
+
+    }
 }
