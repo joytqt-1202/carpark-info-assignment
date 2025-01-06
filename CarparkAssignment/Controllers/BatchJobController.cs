@@ -13,8 +13,12 @@ public class BatchJobController: ControllerBase {
         _batchJob = new BatchJob(dbContext);
     }
 
-    // POST: /batch-job/process
-    [HttpPost("process")]
+    /// <summary>
+    /// Runs a batch job to process and add all records into the database.
+    /// </summary>
+    /// <param name="request">The request containing file path to .csv file</param>
+    /// <response code="200">Batch Job processed successfully.</response>
+    [HttpPost("process")] // POST: /batch-job/process
     public IActionResult ProcessFile([FromBody] BatchJobRequest request) {
     if (request == null || string.IsNullOrEmpty(request.filePath)) {
         return BadRequest("File path is required.");

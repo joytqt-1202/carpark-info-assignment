@@ -8,3 +8,8 @@ public class CarparkSearchRequest {
     public string? free_parking { get; set; }
     public string? night_parking { get; set; }
 }
+
+public class UserFavouritesRequest {
+    public required string car_park_no { get; set; }
+    public required int user_id { get; set; }
+}

@@ -1,4 +1,6 @@
 using CarparkAssignment.Data;
+using CarparkAssignment.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +12,12 @@ public class CarparkController: ControllerBase {
         _dbContext = dbContext;
     }
 
+    /// <summary>
+    /// Retrieves all car parks
+    /// </summary>
+    /// <response code="200">Shows list of car parks with details</response>
     [HttpGet("all")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Carpark[]))]
     public async Task<IActionResult> GetAllCarparks() {
         try {
             var carparks = await _dbContext.Carparks.ToListAsync();
@@ -20,7 +27,13 @@ public class CarparkController: ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Find car park by id
+    /// </summary>
+    /// <param name="id">The ID of the car park</param>
+    /// <response code="200">Shows details of corresponding car park record</response>
     [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Carpark))]
     public async Task<IActionResult> GetCarparkById(string id) {
         try {
             var carpark = await _dbContext.Carparks.FindAsync(id);
@@ -33,7 +46,13 @@ public class CarparkController: ControllerBase {
         }
     }
 
+    /// <summary>
+    /// Filter car parks by various conditions
+    /// </summary>
+    /// <param name="request">The request containing the filter query</param>
+    /// <response code="200">Shows list of car parks that fulfil the condition with details</response>
     [HttpGet("search")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type=typeof(Carpark[]))]
     public async Task<IActionResult> SearchCarpark([FromBody] CarparkSearchRequest request) {
         var query = _dbContext.Carparks.AsQueryable();
 
