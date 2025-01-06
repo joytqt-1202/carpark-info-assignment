@@ -1,2 +1,6 @@
 /CarparkAssignment/bin
 /CarparkAssignment/obj
+/CarparkAssignment/Migrations
+*.db-shm
+*.db
+*.db-wal

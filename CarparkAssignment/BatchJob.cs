@@ -1,15 +1,18 @@
 using System.Globalization;
 using CsvHelper;
-using Microsoft.EntityFrameworkCore;
 using CarparkAssignment.Data;
 using CarparkAssignment.Models;
 
-namespace CarparkAssignment;
+namespace CarparkAssignment.BatchJobs;
 
 public class BatchJob {
-    public static void ProcessFile(string filePath) {
-        using var dbContext = new CarparkDbContext();
-        using var transaction = dbContext.Database.BeginTransaction();
+    private readonly CarparkDbContext _dbContext;
+
+    public BatchJob(CarparkDbContext dbContext) {
+        _dbContext = dbContext;
+    }
+    public void ProcessFile(string filePath) {
+        using var transaction = _dbContext.Database.BeginTransaction();
 
         try {
             Console.WriteLine("Loading data from file...");
@@ -17,22 +20,23 @@ public class BatchJob {
 
             Console.WriteLine("Inserting records into the database...");
             foreach (var carpark in carparks) {
-                var existing = dbContext.Carparks.Find(carpark.car_park_no);
+                var existing = _dbContext.Carparks.Find(carpark.car_park_no);
                 if (existing != null) {
                     // Update existing record
-                    dbContext.Entry(existing).CurrentValues.SetValues(carpark);
+                    _dbContext.Entry(existing).CurrentValues.SetValues(carpark);
                 } else {
                     // Add new record
-                    dbContext.Carparks.Add(carpark);
+                    _dbContext.Carparks.Add(carpark);
                 }
             }
 
-            dbContext.SaveChanges();
+            _dbContext.SaveChanges();
             transaction.Commit();
             Console.WriteLine("Batch job completed successfully.");
         } catch (Exception ex) {
             Console.WriteLine($"Error encountered: {ex.Message}. Rolling back...");
             transaction.Rollback();
+            throw new Exception(ex.Message);
         }
     }
 

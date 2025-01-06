@@ -1,21 +1,29 @@
-﻿using CarparkAssignment;
-using CarparkAssignment.Data;
+﻿using CarparkAssignment.Data;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore;
 
-class Program {
-    static void Main(string[] args) {
-        if (args.Length == 0) {
-            Console.WriteLine("Please provide the path to the CSV file.");
-            return;
-        }
+var builder = WebApplication.CreateBuilder(args);
 
-        string filePath = args[0];
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddDbContext<CarparkDbContext>(options =>
+    options.UseSqlite("Data Source=carpark.db"));
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(); // Registers Swagger services to generate API documentation and testing interface
 
-        // Ensure the database is created
-        using (var dbContext = new CarparkDbContext()) {
-            dbContext.Database.EnsureCreated();
-        }
+var app = builder.Build();
 
-        // Run the batch job
-        BatchJob.ProcessFile(filePath);
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+app.Run();
+
